@@ -31,7 +31,7 @@
         /* Ink Flow Animation */
         @keyframes inkFlow {
             0% { filter: blur(2px) opacity(var(--opacity)); }
-            50% { filter: blur(6px) opacity(calc(var(--opacity) * 1.5)); }
+            50% { filter: blur(6px) opacity(calc(var(--opacity) * 1.25)); }
             100% { filter: blur(3px) opacity(var(--opacity)); }
         }
 
@@ -43,7 +43,7 @@
             max-height: 100vh;
             background: no-repeat center center;
             background-size: cover;
-            animation: inkFlow 10s infinite alternate ease-in-out;
+            animation: inkFlow 8s infinite alternate ease-in-out;
             position: absolute;
             top: 0;
             left: 0;
