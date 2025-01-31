@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ink Flow Background</title>
+    <script>
+        // Function to get URL parameters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Get SVG URL and normalize opacity from URL parameters
+        const svgURL = getQueryParam('svg') || 'https://cdn.vev.design/private/lX6OEJIqtcXl0OaCGZzMFZxWh8g2/image/DDbyrvHPqy_2ise3l.svg';
+        let opacity = parseFloat(getQueryParam('opacity')) || 1; // Default to 1 (fully visible)
+
+        // Ensure opacity is always between 0 and 1
+        opacity = Math.max(0, Math.min(opacity, 1));
+    </script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #00004F; /* Deep Navy Blue */
+        }
+
+        /* Ink Flow Animation */
+        @keyframes inkFlow {
+            0% { filter: blur(3px) opacity(var(--opacity)); }
+            50% { filter: blur(8px) opacity(calc(var(--opacity) * 1.5)); }
+            100% { filter: blur(2px) opacity(var(--opacity)); }
+        }
+
+        /* Ink Background */
+        .ink-bg {
+            width: 100vw;
+            height: 100vh;
+            background: no-repeat center center;
+            background-size: cover;
+            animation: inkFlow 10s infinite alternate ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: var(--opacity);
+            mix-blend-mode: multiply; /* Ensures ink integrates well with navy */
+        }
+
+        /* Smooth Fade-In Effect */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Ink Background -->
+    <div class="ink-bg fade-in" id="ink"></div>
+
+    <script>
+        // Apply parameters to background dynamically
+        document.getElementById("ink").style.backgroundImage = `url('${svgURL}')`;
+        
+        // Normalize and apply opacity correctly
+        document.documentElement.style.setProperty("--opacity", opacity.toFixed(2));
+
+        // Smooth fade-in effect
+        window.onload = function() {
+            document.querySelector(".fade-in").style.opacity = "1";
+        };
+    </script>
+</body>
+</html>
