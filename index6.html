@@ -13,8 +13,8 @@
 
         // Get SVG URL, opacity, and background color from URL parameters
         const svgURL = getQueryParam('svg') || 'https://cdn.vev.design/private/lX6OEJIqtcXl0OaCGZzMFZxWh8g2/image/yFa5W5UOAq_2isa3j.svg';
-        const opacity = getQueryParam('opacity') || '0.50'; // Default to 60%
-        const bgColor = getQueryParam('bg') || '#00004F'; // Default Navy Blue
+        const opacity = getQueryParam('opacity') || '0.50'; // Default opacity
+        const bgColor = getQueryParam('bg') || '#00004F'; // Default Deep Navy Blue
     </script>
     <style>
         html, body {
@@ -26,13 +26,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bgColor); /* Controlled via URL */
+            background: var(--bgColor); /* Background color controlled via URL */
         }
 
         /* Ink Flow Animation */
         @keyframes inkFlow {
-            0% { filter: blur(3px) opacity(var(--opacity)); }
-            50% { filter: blur(6px) opacity(calc(var(--opacity) * 1.35)); }
+            0% { filter: blur(1px) opacity(var(--opacity)); }
+            50% { filter: blur(6px) opacity(calc(var(--opacity) * 1.25)); }
             100% { filter: blur(2px) opacity(var(--opacity)); }
         }
 
@@ -44,7 +44,7 @@
             max-height: 100vh;
             background: no-repeat center center;
             background-size: cover;
-            animation: inkFlow 10s infinite alternate ease-in-out;
+            animation: inkFlow 8s infinite alternate ease-in-out;
             position: absolute;
             top: 0;
             left: 0;
@@ -54,18 +54,14 @@
     </style>
 </head>
 <body>
-    <div class="ink-bg fade-in" id="ink"></div>
+    <div class="ink-bg" id="ink"></div>
 
     <script>
         // Apply parameters dynamically
         document.getElementById("ink").style.backgroundImage = `url('${svgURL}')`;
         document.documentElement.style.setProperty("--opacity", opacity);
         document.documentElement.style.setProperty("--bgColor", bgColor);
-
-        // Smooth fade-in effect
-        window.onload = function() {
-            document.querySelector(".fade-in").style.opacity = "1";
-        };
     </script>
+
 </body>
 </html>
