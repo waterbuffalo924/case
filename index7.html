@@ -49,13 +49,14 @@
             position: absolute;
             top: 0;
             left: 0;
+            filter: invert(1);
             opacity: var(--opacity);
             mix-blend-mode: multiply; /* Ensures ink integrates well with background */
         }
     </style>
 </head>
 <body>
-    <div class="ink-bg" id="ink" style="filter: invert(1);"></div>
+    <div class="ink-bg" id="ink"></div>
 
     <script>
         // Apply parameters dynamically
