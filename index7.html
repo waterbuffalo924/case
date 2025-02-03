@@ -55,7 +55,7 @@
     </style>
 </head>
 <body>
-    <div class="ink-bg" id="ink"></div>
+    <div class="ink-bg" id="ink" style="filter: invert(1);"></div>
 
     <script>
         // Apply parameters dynamically
@@ -65,7 +65,6 @@
         document.documentElement.style.setProperty("--bgColor", bgColor);
 
         // Apply inversion if requested
-        inkElement.style.filter = invert;
     </script>
 
 </body>
