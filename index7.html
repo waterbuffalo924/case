@@ -27,7 +27,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bgColor); /* Background color controlled via URL */
+            background: var(--bgColor);
         }
 
         /* Ink Flow Animation */
@@ -35,6 +35,18 @@
             0% { filter: blur(3px) opacity(var(--opacity)); }
             50% { filter: blur(6px) opacity(calc(var(--opacity) * 1.25)); }
             100% { filter: blur(2px) opacity(var(--opacity)); }
+        }
+
+        /* Wrapper to apply inversion */
+        .ink-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         /* Ink Background */
@@ -49,23 +61,26 @@
             position: absolute;
             top: 0;
             left: 0;
-            filter: invert(1);
             opacity: var(--opacity);
-            mix-blend-mode: multiply; /* Ensures ink integrates well with background */
+            mix-blend-mode: multiply;
         }
     </style>
 </head>
 <body>
-    <div class="ink-bg" id="ink"></div>
+    <div class="ink-container" id="ink-container">
+        <div class="ink-bg" id="ink"></div>
+    </div>
 
     <script>
         // Apply parameters dynamically
         const inkElement = document.getElementById("ink");
+        const inkContainer = document.getElementById("ink-container");
         inkElement.style.backgroundImage = `url('${svgURL}')`;
         document.documentElement.style.setProperty("--opacity", opacity);
         document.documentElement.style.setProperty("--bgColor", bgColor);
 
-        // Apply inversion if requested
+        // Apply inversion to the container, not the image itself
+        inkContainer.style.filter = invert;
     </script>
 
 </body>
