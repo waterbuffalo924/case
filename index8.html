@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ink Flow Background</title>
+    <script>
+        // Function to get URL parameters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Get SVG URL, opacity, background color, and invert flag from URL parameters
+        const svgURL = getQueryParam('svg') || 'https://cdn.vev.design/private/lX6OEJIqtcXl0OaCGZzMFZxWh8g2/image/yFa5W5UOAq_2isa3j.svg';
+        const opacity = getQueryParam('opacity') || '0.50'; // Default opacity
+        const bgColor = getQueryParam('bg') || '#00004F'; // Default Deep Navy Blue
+        const invert = getQueryParam('invert') === '1'; // Convert string to boolean
+    </script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bgColor);
+        }
+
+        /* Ink Flow Animation */
+        @keyframes inkFlow {
+            0% { filter: blur(3px) opacity(var(--opacity)); }
+            50% { filter: blur(6px) opacity(calc(var(--opacity) * 1.25)); }
+            100% { filter: blur(2px) opacity(var(--opacity)); }
+        }
+
+        /* Ink Background */
+        .ink-bg {
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: inkFlow 8s infinite alternate ease-in-out;
+            mix-blend-mode: multiply; /* Ensures ink integrates well with background */
+        }
+
+        /* Image wrapper */
+        .ink-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+      .invert {
+        background-color: white;
+      }
+
+        /* Invert effect */
+        .invert img {
+            filter: invert(1);
+          mix-blend-mode: multiply;
+        }
+    </style>
+</head>
+<body>
+    <div class="ink-bg" id="ink">
+        <img id="ink-img" src="">
+    </div>
+
+    <script>
+        // Apply parameters dynamically
+        const inkImage = document.getElementById("ink-img");
+        const inkContainer = document.getElementById("ink");
+        
+        inkImage.src = svgURL;
+        document.documentElement.style.setProperty("--opacity", opacity);
+        document.documentElement.style.setProperty("--bgColor", bgColor);
+
+        // Apply inversion only if invert=1
+        if (invert) {
+            inkContainer.classList.add("invert");
+            inkContainer.style.backgroundColor="white";
+        }
+    </script>
+
+</body>
+</html>
