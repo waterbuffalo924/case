@@ -57,13 +57,11 @@
             object-fit: cover;
         }
 
-      .invert {
-        background-color: white;
-      }
 
         /* Invert effect */
         .invert img {
             filter: invert(1);
+                    background-color: white;
           mix-blend-mode: multiply;
         }
     </style>
@@ -85,8 +83,9 @@
         // Apply inversion only if invert=1
         if (invert) {
             
-            inkContainer.style.backgroundColor="white";
             inkContainer.classList.add("invert");
+            inkContainer.style.backgroundColor="black";
+
         }
     </script>
 
