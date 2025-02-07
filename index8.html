@@ -60,9 +60,7 @@
 
         /* Invert effect */
         .invert img {
-            filter: invert(1);
-                    background-color: white;
-          mix-blend-mode: multiply;
+    filter: brightness(0) invert(1);
         }
     </style>
 </head>
@@ -84,7 +82,6 @@
         if (invert) {
             
             inkContainer.classList.add("invert");
-            inkContainer.style.backgroundColor="black";
 
         }
     </script>
