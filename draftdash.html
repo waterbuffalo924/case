@@ -31,6 +31,12 @@
             margin-bottom: 15px;
             text-align: center;
         }
+        .welcome-message {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            text-align: center;
+        }
         .case-study-list {
             margin-top: 30px;
         }
@@ -52,9 +58,30 @@
             font-size: 1.2rem;
             font-weight: bold;
         }
+        .locked {
+            filter: blur(3px);
+            background: rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+        }
+        .locked a {
+            pointer-events: none;
+        }
         .community-section {
             margin-top: 40px;
             text-align: center;
+        }
+        .bonus-content {
+            margin-top: 50px;
+            padding: 20px;
+            background: #222;
+            border-radius: 8px;
+        }
+        .profile-settings {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.9rem;
+            opacity: 0.7;
         }
         .footer-text {
             margin-top: 30px;
@@ -64,26 +91,49 @@
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <h1>Welcome Back</h1>
-        <p>Explore your next case study or revisit past insights.</p>
+    <!-- Profile & Settings (Hidden but Accessible) -->
+    <div class="profile-settings">
+        <a href="profile.html" style="color: #bbb; text-decoration: none;">🔧 Profile & Settings</a>
+    </div>
 
+    <div class="dashboard-container">
+        <!-- Welcome Back Section -->
+        <h1>Welcome Back</h1>
+        <p class="welcome-message">Your mind has already started shifting. Ready to go deeper?</p>
+
+        <!-- Case Study Library -->
         <div class="case-study-list">
+            <h2>Your Case Studies</h2>
             <div class="case-study">
                 <a href="case-study-1.html">🔓 Case Study 1 - The Letter</a>
             </div>
-            <div class="case-study">
-                <a href="case-study-2.html">🔒 Case Study 2 - Coming Soon</a>
+            <div class="case-study locked">
+                <a href="#">🔒 Case Study 2 - Coming Soon</a>
             </div>
-            <div class="case-study">
-                <a href="case-study-3.html">🔒 Case Study 3 - Coming Soon</a>
+            <div class="case-study locked">
+                <a href="#">🔒 Case Study 3 - Coming Soon</a>
             </div>
         </div>
 
+        <!-- Community & Social Features -->
         <div class="community-section">
             <h2>📢 Join the Conversation</h2>
             <p>Comment on case studies, discuss insights, and engage with others exploring the depths of the mind.</p>
             <a href="community.html" class="primary">Enter the Community</a>
+        </div>
+
+        <!-- Certificates Teaser -->
+        <div class="bonus-content">
+            <h2>🏆 Unlock Your First Certificate</h2>
+            <p>Your first certificate is waiting. Engage deeply and explore more to earn it.</p>
+            <a href="certificates.html" class="primary">Learn More</a>
+        </div>
+
+        <!-- Bonus Content Section -->
+        <div class="bonus-content">
+            <h2>🎥 Exclusive Insights</h2>
+            <p>Behind-the-scenes case study breakdowns, expert interviews, and more.</p>
+            <a href="bonus.html" class="primary">Access Bonus Content</a>
         </div>
 
         <p class="footer-text">Exclusive for members. Your journey into the mind continues here.</p>
