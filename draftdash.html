@@ -42,6 +42,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
         .case-study {
             width: 80%;
@@ -126,9 +127,31 @@
         .modal.show .modal-content {
             transform: scale(1);
         }
+        .community-section,
+        .bonus-content {
+            display: block;
+            margin-top: 40px;
+            text-align: center;
+        }
+        .profile-settings {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        .footer-text {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body>
+    <div class="profile-settings">
+        <a href="profile.html" style="color: #bbb; text-decoration: none;">🔧 Profile & Settings</a>
+    </div>
+
     <div class="dashboard-container">
         <h1>Welcome Back</h1>
         <p class="welcome-message">Your mind has already started shifting. Ready to go deeper?</p>
@@ -159,6 +182,29 @@
                 <a href="case-study-1.html" class="primary">Enter the Experience</a>
             </div>
         </div>
+
+        <!-- Community & Social Features -->
+        <div class="community-section">
+            <h2>📢 Join the Conversation</h2>
+            <p>Comment on case studies, discuss insights, and engage with others exploring the depths of the mind.</p>
+            <a href="community.html" class="primary">Enter the Community</a>
+        </div>
+
+        <!-- Certificates Teaser -->
+        <div class="bonus-content">
+            <h2>🏆 Unlock Your First Certificate</h2>
+            <p>Your first certificate is waiting. Engage deeply and explore more to earn it.</p>
+            <a href="certificates.html" class="primary">Learn More</a>
+        </div>
+
+        <!-- Bonus Content Section -->
+        <div class="bonus-content">
+            <h2>🎥 Exclusive Insights</h2>
+            <p>Behind-the-scenes case study breakdowns, expert interviews, and more.</p>
+            <a href="bonus.html" class="primary">Access Bonus Content</a>
+        </div>
+
+        <p class="footer-text">Exclusive for members. Your journey into the mind continues here.</p>
     </div>
 
     <script>
