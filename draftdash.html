@@ -86,47 +86,58 @@
             font-weight: bold;
             opacity: 0.9;
         }
-        .community-section {
-            margin-top: 40px;
-            text-align: center;
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
         }
-        .bonus-content {
-            margin-top: 50px;
-            padding: 20px;
-            background: #222;
+        .modal-content {
+            width: 90%;
+            max-width: 900px;
+            background: #111;
+            padding: 30px;
             border-radius: 8px;
+            text-align: left;
+            color: #fff;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.4s ease-in-out;
         }
-        .profile-settings {
+        .modal-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 0.9rem;
-            opacity: 0.7;
+            top: 20px;
+            right: 30px;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
-        .footer-text {
-            margin-top: 30px;
-            font-size: 0.9rem;
-            opacity: 0.7;
+        .modal.show {
+            opacity: 1;
+        }
+        .modal.show .modal-content {
+            transform: scale(1);
         }
     </style>
 </head>
 <body>
-    <!-- Profile & Settings (Hidden but Accessible) -->
-    <div class="profile-settings">
-        <a href="profile.html" style="color: #bbb; text-decoration: none;">🔧 Profile & Settings</a>
-    </div>
-
     <div class="dashboard-container">
-        <!-- Welcome Back Section -->
         <h1>Welcome Back</h1>
         <p class="welcome-message">Your mind has already started shifting. Ready to go deeper?</p>
 
-        <!-- Case Study Library -->
         <div class="case-study-list">
             <h2>Your Case Studies</h2>
 
-            <!-- Unlocked Case Study -->
-            <div class="case-study unlocked" onclick="openCaseStudy('case-study-1.html')">
+            <!-- Unlocked Case Study with Modal Pop-Up -->
+            <div class="case-study unlocked" onclick="openModal()">
                 🔓 Case Study 1 - The Letter
             </div>
 
@@ -139,34 +150,28 @@
             </div>
         </div>
 
-        <!-- Community & Social Features -->
-        <div class="community-section">
-            <h2>📢 Join the Conversation</h2>
-            <p>Comment on case studies, discuss insights, and engage with others exploring the depths of the mind.</p>
-            <a href="community.html" class="primary">Enter the Community</a>
+        <!-- Case Study Modal Pop-Up -->
+        <div id="caseStudyModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+                <h2>🔓 Case Study 1 - The Letter</h2>
+                <p>An immersive experience awaits. Click below to begin.</p>
+                <a href="case-study-1.html" class="primary">Enter the Experience</a>
+            </div>
         </div>
-
-        <!-- Certificates Teaser -->
-        <div class="bonus-content">
-            <h2>🏆 Unlock Your First Certificate</h2>
-            <p>Your first certificate is waiting. Engage deeply and explore more to earn it.</p>
-            <a href="certificates.html" class="primary">Learn More</a>
-        </div>
-
-        <!-- Bonus Content Section -->
-        <div class="bonus-content">
-            <h2>🎥 Exclusive Insights</h2>
-            <p>Behind-the-scenes case study breakdowns, expert interviews, and more.</p>
-            <a href="bonus.html" class="primary">Access Bonus Content</a>
-        </div>
-
-        <p class="footer-text">Exclusive for members. Your journey into the mind continues here.</p>
     </div>
 
     <script>
-        function openCaseStudy(url) {
-            // Smooth Scroll Down or Vev Pop-Up
-            window.location.href = url;
+        function openModal() {
+            document.getElementById("caseStudyModal").classList.add("show");
+            document.getElementById("caseStudyModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("caseStudyModal").classList.remove("show");
+            setTimeout(() => {
+                document.getElementById("caseStudyModal").style.display = "none";
+            }, 400);
         }
 
         function joinWaitlist() {
