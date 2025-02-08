@@ -39,32 +39,52 @@
         }
         .case-study-list {
             margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .case-study {
-            background: #1c1c1c;
-            padding: 15px;
+            width: 80%;
+            max-width: 700px;
+            padding: 20px;
             border-radius: 5px;
-            margin-bottom: 15px;
+            text-align: center;
             transition: 0.3s;
-        }
-        .case-study:hover {
-            background: #ff5722;
-            color: #fff;
-        }
-        .case-study a {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            font-size: 1.2rem;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
             font-weight: bold;
+            height: 150px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .unlocked {
+            background: url('https://example.com/case1-thumbnail.jpg');
         }
         .locked {
+            background: url('https://example.com/case2-thumbnail.jpg');
             filter: blur(3px);
-            background: rgba(255, 255, 255, 0.1);
             cursor: not-allowed;
         }
-        .locked a {
-            pointer-events: none;
+        .locked:hover {
+            filter: blur(0px);
+        }
+        .locked::after {
+            content: "🔒 Join the Waitlist";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            opacity: 0.9;
         }
         .community-section {
             margin-top: 40px;
@@ -104,14 +124,18 @@
         <!-- Case Study Library -->
         <div class="case-study-list">
             <h2>Your Case Studies</h2>
-            <div class="case-study">
-                <a href="case-study-1.html">🔓 Case Study 1 - The Letter</a>
+
+            <!-- Unlocked Case Study -->
+            <div class="case-study unlocked" onclick="openCaseStudy('case-study-1.html')">
+                🔓 Case Study 1 - The Letter
             </div>
-            <div class="case-study locked">
-                <a href="#">🔒 Case Study 2 - Coming Soon</a>
+
+            <!-- Locked Case Study with Waitlist Option -->
+            <div class="case-study locked" onclick="joinWaitlist()">
+                🔒 Case Study 2 - Coming Soon
             </div>
-            <div class="case-study locked">
-                <a href="#">🔒 Case Study 3 - Coming Soon</a>
+            <div class="case-study locked" onclick="joinWaitlist()">
+                🔒 Case Study 3 - Coming Soon
             </div>
         </div>
 
@@ -138,5 +162,16 @@
 
         <p class="footer-text">Exclusive for members. Your journey into the mind continues here.</p>
     </div>
+
+    <script>
+        function openCaseStudy(url) {
+            // Smooth Scroll Down or Vev Pop-Up
+            window.location.href = url;
+        }
+
+        function joinWaitlist() {
+            alert("Waitlist feature coming soon. Sign up for updates!");
+        }
+    </script>
 </body>
 </html>
