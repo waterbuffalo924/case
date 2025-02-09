@@ -46,7 +46,7 @@
             const glowSpread = 25; // Glow effect intensity when blinking
 
             // Depth blur settings
-            const depthBlurIntensity = 10; // Blur effect intensity for dots in the background
+            const depthBlurIntensity = 25; // Blur effect intensity for dots in the background
 
             // Colors
             const lineColor = "#272727"; // Subtle gray for connections
@@ -72,7 +72,7 @@
                     velocityTheta: (Math.random() - 0.5) * speedFactor,
                     velocityPhi: (Math.random() - 0.5) * speedFactor,
                     offsetZ: (Math.random() - 0.5) * movementRangeZ,
-                    speed: Math.random() * 0.005 + 0.002,
+                    speed: Math.random() * 0.003 + 0.002,
                     isBlinking: false,
                     blinkInterval: Math.random() * blinkFrequency + blinkFrequency / 2, // Randomized interval
                 });
