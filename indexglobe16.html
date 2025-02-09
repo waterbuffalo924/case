@@ -98,7 +98,7 @@
                     dot.z = radius * Math.cos(dot.theta) + Math.sin(performance.now() * dot.speed) * dot.offsetZ;
 
                     // Randomly make dots blink (10% chance per frame)
-                    if (Math.random() < 0.01) {
+                    if (Math.random() < 0.3) {
                         dot.isBlinking = true;
                         setTimeout(() => { dot.isBlinking = false; }, 200); // Blinks for 200ms
                     }
