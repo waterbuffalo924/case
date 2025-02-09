@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Spinning Globe with Light Pulses</title>
+    <style>
+        body {
+            background-color: #1a1a1a; /* Midnight graphite background */
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        /* Container for the spinning globe */
+        .globe-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Spinning effect */
+        .globe {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 5%, transparent 60%);
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        /* Dots */
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Light up animation */
+        .glow {
+            opacity: 1 !important;
+            box-shadow: 0 0 6px 3px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Globe Container -->
+    <div class="globe-container">
+        <div class="globe"></div>
+    </div>
+
+    <!-- Canvas for connecting lines -->
+    <canvas id="glowCanvas"></canvas>
+
+    <script>
+        const globeContainer = document.querySelector(".globe-container");
+        const canvas = document.getElementById("glowCanvas");
+        const ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+
+        // Generate random dots
+        const dots = [];
+        const numDots = 40; // Number of points
+        for (let i = 0; i < numDots; i++) {
+            const dot = document.createElement("div");
+            dot.classList.add("dot");
+            globeContainer.appendChild(dot);
+            dots.push({
+                element: dot,
+                x: Math.random() * 100,
+                y: Math.random() * 100,
+                opacity: Math.random() * 0.5 + 0.5,
+            });
+        }
+
+        function positionDots() {
+            dots.forEach(dot => {
+                dot.element.style.left = `${dot.x}%`;
+                dot.element.style.top = `${dot.y}%`;
+                dot.element.style.opacity = dot.opacity;
+            });
+        }
+        positionDots();
+
+        // Function to animate light-up effect
+        function pulseDots() {
+            const randomIndex = Math.floor(Math.random() * dots.length);
+            const dot = dots[randomIndex].element;
+            dot.classList.add("glow");
+            setTimeout(() => {
+                dot.classList.remove("glow");
+            }, 800);
+        }
+        setInterval(pulseDots, 600); // Pulse a dot every 600ms
+
+        // Draw connecting lines dynamically
+        function drawLines() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+            ctx.lineWidth = 1;
+
+            dots.forEach(dot1 => {
+                dots.forEach(dot2 => {
+                    const dx = (dot1.x / 100) * canvas.width - (dot2.x / 100) * canvas.width;
+                    const dy = (dot1.y / 100) * canvas.height - (dot2.y / 100) * canvas.height;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo((dot1.x / 100) * canvas.width, (dot1.y / 100) * canvas.height);
+                        ctx.lineTo((dot2.x / 100) * canvas.width, (dot2.y / 100) * canvas.height);
+                        ctx.stroke();
+                    }
+                });
+            });
+
+            requestAnimationFrame(drawLines);
+        }
+        drawLines();
+    </script>
+
+</body>
+</html>
