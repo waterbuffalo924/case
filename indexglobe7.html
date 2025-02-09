@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Rotating Dot Sphere</title>
+    <style>
+        body {
+            background-color: #1a1a1a; /* Midnight graphite background */
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="sphereCanvas"></canvas>
+
+    <script>
+        (function () { // Wrapped script in an IIFE to prevent variable redeclaration issues
+            const canvas = document.getElementById("sphereCanvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const numDots = 1000; // Number of dots on the sphere
+            const numConnections = 15; // Number of nearest neighbors to connect each dot to
+            const radius = 250; // Sphere size
+            const movementRangeXY = 2; // Max movement range on X/Y axis (surface)
+            const movementRangeZ = 1; // Max movement range on Z axis (depth variation)
+            const dotBrightness = 1.2; // Brightness of dots (1.0 = white, lower = dimmer)
+            const lineBrightness = 0.05; // Brightness of connecting lines (1.0 = white, lower = dimmer)
+
+            let angleX = 0;
+            let angleY = 0;
+            const dots = [];
+
+            // Generate points on a sphere using spherical coordinates
+            for (let i = 0; i < numDots; i++) {
+                const theta = Math.acos(1 - 2 * Math.random()); // Latitude
+                const phi = 2 * Math.PI * Math.random(); // Longitude
+
+                const baseX = radius * Math.sin(theta) * Math.cos(phi);
+                const baseY = radius * Math.sin(theta) * Math.sin(phi);
+                const baseZ = radius * Math.cos(theta);
+
+                dots.push({
+                    baseX, baseY, baseZ,
+                    x: baseX, y: baseY, z: baseZ,
+                    offsetX: Math.random() < 0.5 ? (Math.random() - 0.5) * movementRangeXY : 0, // Only some dots move in XY
+                    offsetY: Math.random() < 0.5 ? (Math.random() - 0.5) * movementRangeXY : 0,
+                    offsetZ: Math.random() < 0.5 ? (Math.random() - 0.5) * movementRangeZ : 0, // Others move in Z
+                    speed: Math.random() * 0.005 + 0.002 // Much slower movement
+                });
+            }
+
+            function rotateX(point, angle) {
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+                return {
+                    x: point.x,
+                    y: point.y * cos - point.z * sin,
+                    z: point.y * sin + point.z * cos
+                };
+            }
+
+            function rotateY(point, angle) {
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+                return {
+                    x: point.x * cos - point.z * sin,
+                    y: point.y,
+                    z: point.x * sin + point.z * cos
+                };
+            }
+
+            function updateDots() {
+                dots.forEach(dot => {
+                    const timeFactor = performance.now() * dot.speed;
+                    
+                    if (dot.offsetX !== 0 || dot.offsetY !== 0) {
+                        // Move only in XY (on the sphere surface)
+                        dot.x = dot.baseX + Math.sin(timeFactor) * dot.offsetX;
+                        dot.y = dot.baseY + Math.cos(timeFactor) * dot.offsetY;
+                    } else {
+                        // Move only in Z (depth variation)
+                        dot.z = dot.baseZ + Math.sin(timeFactor) * dot.offsetZ;
+                    }
+                });
+            }
+
+            function getDistance(dot1, dot2) {
+                return Math.sqrt(
+                    (dot1.x - dot2.x) ** 2 +
+                    (dot1.y - dot2.y) ** 2 +
+                    (dot1.z - dot2.z) ** 2
+                );
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+
+                updateDots(); // Update positions before drawing
+
+                const rotatedDots = dots.map(dot => {
+                    let rotated = rotateX(dot, angleX);
+                    rotated = rotateY(rotated, angleY);
+                    return rotated;
+                });
+
+                rotatedDots.sort((a, b) => b.z - a.z); // Sort for perspective effect
+
+                // Draw connections first (so dots appear on top)
+                rotatedDots.forEach(dot => {
+                    // Find the closest neighbors
+                    let neighbors = [...rotatedDots]
+                        .sort((a, b) => getDistance(dot, a) - getDistance(dot, b))
+                        .slice(1, numConnections + 1); // Exclude self (first element)
+
+                    neighbors.forEach(neighbor => {
+                        const perspectiveStart = 300 / (300 + dot.z);
+                        const perspectiveEnd = 300 / (300 + neighbor.z);
+                        const x1 = centerX + dot.x * perspectiveStart;
+                        const y1 = centerY + dot.y * perspectiveStart;
+                        const x2 = centerX + neighbor.x * perspectiveEnd;
+                        const y2 = centerY + neighbor.y * perspectiveEnd;
+
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${lineBrightness})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                    });
+                });
+
+                // Draw dots on top
+                rotatedDots.forEach(dot => {
+                    const perspective = 300 / (300 + dot.z);
+                    const x = centerX + dot.x * perspective;
+                    const y = centerY + dot.y * perspective;
+
+                    ctx.beginPath();
+                    ctx.arc(x, y, 2, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${dotBrightness})`;
+                    ctx.fill();
+                });
+
+                angleX += 0.001; // Rotation speed
+                angleY += 0.002;
+
+                requestAnimationFrame(draw);
+            }
+
+            draw();
+        })(); // End of IIFE
+    </script>
+</body>
+</html>
