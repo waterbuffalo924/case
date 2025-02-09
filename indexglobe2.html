@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Rotating Dot Sphere</title>
+    <style>
+        body {
+            background-color: #1a1a1a; /* Midnight graphite background */
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="sphereCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("sphereCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const dots = [];
+        const numDots = 200; // Number of dots on the sphere
+        const radius = 150; // Sphere size
+        let angleX = 0;
+        let angleY = 0;
+
+        // Generate points on a sphere using spherical coordinates
+        for (let i = 0; i < numDots; i++) {
+            const theta = Math.acos(1 - 2 * Math.random()); // Latitude
+            const phi = 2 * Math.PI * Math.random(); // Longitude
+
+            const x = radius * Math.sin(theta) * Math.cos(phi);
+            const y = radius * Math.sin(theta) * Math.sin(phi);
+            const z = radius * Math.cos(theta);
+
+            dots.push({ x, y, z });
+        }
+
+        function rotateX(point, angle) {
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            const y = point.y * cos - point.z * sin;
+            const z = point.y * sin + point.z * cos;
+            return { x: point.x, y, z };
+        }
+
+        function rotateY(point, angle) {
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            const x = point.x * cos - point.z * sin;
+            const z = point.x * sin + point.z * cos;
+            return { x, y: point.y, z };
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            const rotatedDots = dots.map(dot => {
+                let rotated = rotateX(dot, angleX);
+                rotated = rotateY(rotated, angleY);
+                return rotated;
+            });
+
+            rotatedDots.sort((a, b) => b.z - a.z); // Sort for perspective effect
+
+            rotatedDots.forEach(dot => {
+                const perspective = 300 / (300 + dot.z);
+                const x = centerX + dot.x * perspective;
+                const y = centerY + dot.y * perspective;
+
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = "white";
+                ctx.fill();
+            });
+
+            angleX += 0.002; // Rotation speed
+            angleY += 0.003;
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+</html>
