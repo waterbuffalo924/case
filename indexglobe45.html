@@ -19,7 +19,6 @@
         canvas {
             width: 100%;
             display: block;
-            object-fit: contain;
         }
 
     </style>
@@ -33,7 +32,7 @@
 
         // Use Stack Overflow method: width is 100%, height is a ratio of width
    //     canvas.width = window.innerWidth;
-    //    canvas.height = canvas.width * 0.75; // Maintain a 4:3 ratio
+        canvas.height = canvas.width * 0.75; // Maintain a 4:3 ratio
 
         // Core settings
         const numDots = 200;
