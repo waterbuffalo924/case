@@ -20,6 +20,10 @@
             width: 100%;
             display: block;
         }
+
+         #sphereCanvas {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -30,7 +34,7 @@
         const ctx = canvas.getContext("2d");
 
         // Use Stack Overflow method: width is 100%, height is a ratio of width
-        canvas.width = window.innerWidth;
+   //     canvas.width = window.innerWidth;
         canvas.height = canvas.width * 0.75; // Maintain a 4:3 ratio
 
         // Core settings
