@@ -42,7 +42,7 @@
         const movementRangeZ = 1;
         const speedFactor = 0.001;
 
-        let radius = Math.min(window.innerWidth, window.innerHeight) * 0.1; // Keep constant across all sizes
+        let radius = Math.min(window.innerWidth, window.innerHeight) * 0.5; // Keep constant across all sizes
 
         const blinkFrequency = 6000;
         const blinkDuration = 400;
@@ -216,7 +216,7 @@
 
         window.addEventListener("resize", () => {
             updateCanvasSize();
-            radius = Math.min(window.innerWidth, window.innerHeight) * 0.1; // Keeps scaling correct
+            radius = Math.min(window.innerWidth, window.innerHeight) * 0.5; // Keeps scaling correct
             generateDots();
         });
     </script>
