@@ -23,15 +23,15 @@
     </style>
 </head>
 <body>
-    <canvas id="sphereCanvas" height="100%" width="100%"></canvas>
+    <canvas id="sphereCanvas"></canvas>
 
     <script>
         (function () {
             const canvas = document.getElementById("sphereCanvas");
             const ctx = canvas.getContext("2d");
 
-//            canvas.width = window.innerWidth;
-//            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
             // Core settings
             const numDots = 200; // Number of dots on the sphere
@@ -49,8 +49,8 @@
             // Depth blur settings
             const maxBlur = 0; // Maximum blur amount for farthest dots
             const minSize = 2; // Smallest dot size (for front dots)
-            const maxSize = 3.2; // Largest dot size (for back dots)
-            const minOpacity = 0.25; // Minimum opacity for back dots
+            const maxSize = 2.3; // Largest dot size (for back dots)
+            const minOpacity = 0.5; // Minimum opacity for back dots
 
             // Colors
             const lineColor = "#272727"; // Subtle gray for connections
