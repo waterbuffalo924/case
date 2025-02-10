@@ -23,15 +23,15 @@
     </style>
 </head>
 <body>
-    <canvas id="sphereCanvas"></canvas>
+    <canvas id="sphereCanvas" height="100%" width="100%"></canvas>
 
     <script>
         (function () {
             const canvas = document.getElementById("sphereCanvas");
             const ctx = canvas.getContext("2d");
 
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+//            canvas.width = window.innerWidth;
+//            canvas.height = window.innerHeight;
 
             // Core settings
             const numDots = 200; // Number of dots on the sphere
@@ -41,16 +41,16 @@
             const speedFactor = 0.001; // Speed of movement across the sphere surface
 
             // Blinking settings
-            const blinkFrequency = 4000; // Average time (in ms) between blinks per dot
+            const blinkFrequency = 6000; // Average time (in ms) between blinks per dot
             const blinkDuration = 400; // Duration of each blink in milliseconds
             const glowSpread = 100; // Base glow effect intensity when blinking
             const glowVariation = 20; // Maximum variation in glow spread
 
             // Depth blur settings
             const maxBlur = 0; // Maximum blur amount for farthest dots
-            const minSize = 1; // Smallest dot size (for front dots)
+            const minSize = 2; // Smallest dot size (for front dots)
             const maxSize = 3.2; // Largest dot size (for back dots)
-            const minOpacity = 0.5; // Minimum opacity for back dots
+            const minOpacity = 0.25; // Minimum opacity for back dots
 
             // Colors
             const lineColor = "#272727"; // Subtle gray for connections
