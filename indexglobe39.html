@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Rotating Dot Sphere</title>
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="sphereCanvas"></canvas>
+
+    <script>
+        (function () {
+            const canvas = document.getElementById("sphereCanvas");
+            const ctx = canvas.getContext("2d");
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas(); // Initial setup
+
+            // Core settings
+            const numDots = 200;
+            const numConnections = 15;
+            let baseRadius = 250;
+            const movementRangeZ = 1;
+            const speedFactor = 0.001;
+
+            // Blinking settings
+            const blinkFrequency = 6000;
+            const blinkDuration = 400;
+            const glowSpread = 100;
+            const glowVariation = 20;
+
+            // Depth blur settings
+            const maxBlur = 0;
+            const minSize = 2;
+            const maxSize = 2.3;
+            const minOpacity = 0.5;
+
+            // Colors
+            const lineColor = "#272727";
+            const baseDotColor = "#A5A5A5";
+            const brightDotColor = "#FFFFFF";
+
+            let angleX = 0;
+            let angleY = 0;
+            let dots = [];
+
+            function generateDots() {
+                dots = [];
+                const radius = Math.min(window.innerWidth, window.innerHeight) * 0.4; // Dynamic size
+                for (let i = 0; i < numDots; i++) {
+                    const theta = Math.acos(1 - 2 * Math.random());
+                    const phi = 2 * Math.PI * Math.random();
+
+                    let x = radius * Math.sin(theta) * Math.cos(phi);
+                    let y = radius * Math.sin(theta) * Math.sin(phi);
+                    let z = radius * Math.cos(theta);
+
+                    dots.push({
+                        theta, phi,
+                        x, y, z,
+                        velocityTheta: (Math.random() - 0.5) * speedFactor,
+                        velocityPhi: (Math.random() - 0.5) * speedFactor,
+                        offsetZ: (Math.random() - 0.5) * movementRangeZ,
+                        speed: Math.random() * 0.003 + 0.002,
+                        isBlinking: false,
+                        blinkInterval: Math.random() * blinkFrequency + blinkFrequency / 2,
+                        randomGlowFactor: 1 + (Math.random() * (glowVariation / 100))
+                    });
+                }
+            }
+
+            generateDots();
+            window.addEventListener("resize", generateDots);
+
+            function rotateX(point, angle) {
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+                return {
+                    x: point.x,
+                    y: point.y * cos - point.z * sin,
+                    z: point.y * sin + point.z * cos
+                };
+            }
+
+            function rotateY(point, angle) {
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+                return {
+                    x: point.x * cos - point.z * sin,
+                    y: point.y,
+                    z: point.x * sin + point.z * cos
+                };
+            }
+
+            function updateDots() {
+                dots.forEach(dot => {
+                    dot.theta += dot.velocityTheta;
+                    dot.phi += dot.velocityPhi;
+
+                    const radius = Math.min(window.innerWidth, window.innerHeight) * 0.4;
+                    dot.x = radius * Math.sin(dot.theta) * Math.cos(dot.phi);
+                    dot.y = radius * Math.sin(dot.theta) * Math.sin(dot.phi);
+                    dot.z = radius * Math.cos(dot.theta) + Math.sin(performance.now() * dot.speed) * dot.offsetZ;
+                });
+            }
+
+            function getDistance(dot1, dot2) {
+                return Math.sqrt(
+                    (dot1.x - dot2.x) ** 2 +
+                    (dot1.y - dot2.y) ** 2 +
+                    (dot1.z - dot2.z) ** 2
+                );
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+
+                updateDots();
+
+                const rotatedDots = dots.map(dot => {
+                    let rotated = rotateX(dot, angleX);
+                    rotated = rotateY(rotated, angleY);
+                    rotated.isBlinking = dot.isBlinking;
+                    rotated.randomGlowFactor = dot.randomGlowFactor;
+                    return rotated;
+                });
+
+                rotatedDots.sort((a, b) => b.z - a.z);
+
+                rotatedDots.forEach(dot => {
+                    let neighbors = [...rotatedDots]
+                        .sort((a, b) => getDistance(dot, a) - getDistance(dot, b))
+                        .slice(1, numConnections + 1);
+
+                    neighbors.forEach(neighbor => {
+                        const perspectiveStart = 300 / (300 + dot.z);
+                        const perspectiveEnd = 300 / (300 + neighbor.z);
+                        const x1 = centerX + dot.x * perspectiveStart;
+                        const y1 = centerY + dot.y * perspectiveStart;
+                        const x2 = centerX + neighbor.x * perspectiveEnd;
+                        const y2 = centerY + neighbor.y * perspectiveEnd;
+
+                        ctx.strokeStyle = lineColor;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                    });
+                });
+
+                rotatedDots.forEach(dot => {
+                    const perspective = 300 / (300 + dot.z);
+                    const x = centerX + dot.x * perspective;
+                    const y = centerY + dot.y * perspective;
+
+                    const depthFactor = (dot.z + baseRadius) / (2 * baseRadius);
+                    const dotSize = minSize + depthFactor * (maxSize - minSize);
+                    const dotOpacity = 1 - depthFactor * (1 - minOpacity);
+                    const glowIntensity = glowSpread * dot.randomGlowFactor;
+
+                    ctx.beginPath();
+                    ctx.arc(x, y, dot.isBlinking ? dotSize + 1 : dotSize, 0, Math.PI * 2);
+
+                    if (dot.isBlinking) {
+                        ctx.shadowBlur = glowIntensity;
+                        ctx.shadowColor = brightDotColor;
+                        ctx.fillStyle = `rgba(255, 255, 255, ${dotOpacity + 0.2})`;
+                    } else {
+                        ctx.shadowBlur = 0;
+                        ctx.fillStyle = `rgba(165, 165, 165, ${dotOpacity})`;
+                    }
+
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+
+                angleX += 0.001;
+                angleY += 0.002;
+
+                requestAnimationFrame(draw);
+            }
+
+            function startBlinking() {
+                dots.forEach(dot => {
+                    setInterval(() => {
+                        dot.isBlinking = true;
+                        setTimeout(() => { dot.isBlinking = false; }, blinkDuration);
+                    }, dot.blinkInterval);
+                });
+            }
+
+            startBlinking();
+            draw();
+        })();
+    </script>
+</body>
+</html>
